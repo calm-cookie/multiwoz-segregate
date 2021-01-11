@@ -122,7 +122,7 @@ def segregate(dataset, parent_dir):
         return print("The file {} cannot be decoded as JSON".format(dataset))
     
     print("\nSegregating...")
-    print("This might take a couple of mintures")
+    print("This might take a couple of minutes")
     # --- Iterate over the original dataset and perform checks ---
     for filename in data:
         goal = data[filename]['goal']

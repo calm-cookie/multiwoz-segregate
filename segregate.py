@@ -1,5 +1,5 @@
 ''' 
-Program purpose: Segregate the MultiWoz 2.1 Dataset into 'attraction', 'restaurant', 'taxi' and a combination of these domains
+Program purpose: Segregate the MultiWoz 2.1 with corrections from MultiWoz 2.2 Dataset into 'attraction', 'restaurant', 'taxi' and a combination of these domains
 
 Input: MultiWoz 2.1 Dataset in JSON
 

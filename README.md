@@ -1,6 +1,8 @@
 # MultiWOZ Segregator
 
-The python script is used to segregate the [MultiWOZ_2.1](https://github.com/budzianowski/multiwoz/tree/master/data "Available here") dataset.
+The python script is used to segregate the [MultiWOZ_2.1](https://github.com/budzianowski/multiwoz/tree/master/data "Available here") dataset after incorporating corrections from [MultiWOZ_2.2](https://github.com/budzianowski/multiwoz/tree/master/data/MultiWOZ_2.2 "Available here").
+
+Steps to incorporate **MultiWOZ_2.2** corrections into **MultiWOZ_2.1** dataset are available [here](https://github.com/budzianowski/multiwoz/tree/master/data/MultiWOZ_2.2#conversion-to-the-data-format-of-multiwoz-21).
 
 It segregates the dataset into **attraction**, **restaurant**, **taxi** and combinations of these domains.
 

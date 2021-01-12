@@ -7,10 +7,11 @@ Output:
 1. JSON files separated into different folders
 2. stats.xlsx with count of number of files
 3. list.json in each folder with list of filenames
+4. JSON conversation files with 'goal' and 'log'(containing only 'text')
 
 Running command syntax:
-1. Set the OUTPUT_DIR and DATASET paths in the file (line 20, 21)
-2. Install xlswriter using 'pip3 install xlsxwriter'
+1. Set the OUTPUT_DIR and DATASET paths in the file (line 21, 22)
+2. Install xlswriter using 'pip3 install xlsxwriter==1.3.7'
 3. Run using 'python3 segregate.py'
 '''
 import os
@@ -52,6 +53,15 @@ def create_directories(parent_dir, directories):
         
         except FileExistsError as exists:
             print("Already exists -> {}".format(exists.filename))
+        
+        # --- Create empty folders for dialogue_txt ---
+        path = os.path.join(parent_dir, 'dataset/dialogue_txt/' + directory)
+        try:
+            os.makedirs(path)
+            print("Created -> {}".format(path))
+        
+        except FileExistsError as exists:
+            print("Already exists -> {}".format(exists.filename))
 
         # --- Initiate a blank list.json in each folder to store the list of filenames ---
         path = os.path.join(parent_dir, 'dataset/' + directory + '/list.json')
@@ -87,6 +97,31 @@ def separate_file(data, parent_dir, combination, filename):
     with open(path, 'w') as f:
         json.dump(files, f, indent=4)
 
+
+def dialogue_text(data, parent_dir, combination, filename):
+    '''
+    Create conversation files with 'goal' and 'log' containing only 'text'
+    '''
+    new_data = {
+        "goal": {},
+        "log": []
+    }
+
+    new_data['goal'] = data[filename]['goal']
+
+    for dialogue in data[filename]['log']:
+        new_data['log'].append({
+            "text": dialogue['text']
+        })
+    
+    name, extension = filename.split('.')
+    new_filename = name + '_conv.' + extension
+
+    path = os.path.join(parent_dir, 'dataset/dialogue_txt/{}/{}'.format(combination, new_filename))
+    with open(path, 'w') as f:
+        json.dump(new_data, f, indent=2)
+
+
 def write_to_excel(parent_dir):
     '''
     Write the stats stored in 'directories' global variable to excel file
@@ -105,6 +140,7 @@ def write_to_excel(parent_dir):
     
     wb.close()
     print("Written :)")
+
 
 def segregate(dataset, parent_dir):
     '''
@@ -131,24 +167,30 @@ def segregate(dataset, parent_dir):
 
             if goal['attraction'] and goal['restaurant'] and goal['taxi']:
                 separate_file(data, parent_dir, 'attraction-restaurant-taxi', filename)
+                dialogue_text(data, parent_dir, 'attraction-restaurant-taxi', filename)
 
             elif goal['attraction'] and goal['restaurant']:
                 separate_file(data, parent_dir, 'attraction-restaurant', filename)
+                dialogue_text(data, parent_dir, 'attraction-restaurant', filename)
 
             elif goal['restaurant'] and goal['taxi']:
                 separate_file(data, parent_dir, 'restaurant-taxi', filename)
+                dialogue_text(data, parent_dir, 'restaurant-taxi', filename)
 
             elif goal['attraction'] and goal['taxi']:
                 separate_file(data, parent_dir, 'attraction-taxi', filename)
+                dialogue_text(data, parent_dir, 'attraction-taxi', filename)
 
             elif goal['attraction']:
                 separate_file(data, parent_dir, 'attraction', filename)
+                dialogue_text(data, parent_dir, 'attraction', filename)
             
             elif goal['restaurant']:
                 separate_file(data, parent_dir, 'restaurant', filename)
+                dialogue_text(data, parent_dir, 'restaurant', filename)
 
             elif goal['taxi']:
-                separate_file(data, parent_dir, 'taxi', filename)
+                dialogue_text(data, parent_dir, 'taxi', filename)
 
     # --- Close dataset file --- 
     f.close()
